@@ -1,0 +1,31 @@
+{
+  "name": "personal-library",
+  "version": "0.1.0",
+  "description": "Personal Library",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "cors": "^2.8.1",
+    "body-parser": "^1.15.2",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mongodb": "^3.6.2",
+    "zombie": "^5.0.5",
+    "mocha": "^3.2.0",
+    "dotenv": "^8.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/max-severin/personal-library"
+  },
+  "keywords": [
+    "node",
+    "hyperdev",
+    "express"
+  ],
+  "author": "Max Severin",
+  "license": "MIT"
+}
