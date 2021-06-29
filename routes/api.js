@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const { ObjectId } = mongoose.Types;
 const { DB } = process.env;
 
 (async () => {
@@ -94,8 +95,24 @@ module.exports = function (app) {
 
   app.route('/api/books/:id')
     .get(async (req, res) => {
-      let bookid = req.params.id;
-      //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+      const _id = req.params.id;
+
+      try {
+        const book = await bookModel.findById(new ObjectId(_id));
+      
+        if (!book) {
+          return res.status(200).send('no book exists');
+        }
+
+        res.status(200).json({
+          _id: book._id,
+          title: book.title,
+          comments: book.comments,
+          commentcount: book.comments.length,
+        });
+      } catch(error) {
+        return res.status(200).send('no book exists');
+      }
     })
     
     .post(async (req, res) => {
