@@ -86,9 +86,18 @@ module.exports = function (app) {
         });
       }
     })
-    
+        
     .delete(async (req, res) => {
-      //if successful response will be 'complete delete successful'
+      try {
+        await bookModel.remove();
+
+        return res.status(200).send('complete delete successful');
+      } catch(error) {
+        res.status(200).json({
+          error,
+          message: 'Server Error',
+        });
+      }
     });
 
 
