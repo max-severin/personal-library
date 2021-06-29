@@ -41,8 +41,23 @@ module.exports = function (app) {
 
   app.route('/api/books')
     .get(async (req, res) => {
-      //response will be array of book objects
-      //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
+      try {
+        const books = await bookModel.find();
+
+        res.status(200).json(
+          books.map((book) => ({
+            _id: book._id,
+            title: book.title,
+            comments: book.comments,
+            commentcount: book.comments.length,
+          }))
+        );
+      } catch(error) {
+        res.status(200).json({
+          error,
+          message: 'Server Error',
+        });
+      }
     })
     
     .post(async (req, res) => {
