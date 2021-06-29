@@ -148,8 +148,19 @@ module.exports = function (app) {
     })
     
     .delete(async (req, res) => {
-      let bookid = req.params.id;
-      //if successful response will be 'delete successful'
+      let _id = req.params.id;
+
+      try {
+        const book = await bookModel.findByIdAndDelete(new ObjectId(_id));
+        
+        if (!book) {
+          return res.status(200).send('no book exists');
+        }
+
+        return res.status(200).send('delete successful');
+      } catch(error) {
+        return res.status(200).send('no book exists');
+      }
     });
   
 };
