@@ -151,21 +151,74 @@ suite('Functional Tests', function() {
     });
 
 
-    // suite('POST /api/books/[id] => add comment/expect book object with id', function(){
+    suite('POST /api/books/[id] => add comment/expect book object with id', function(){
       
-    //   test('Test POST /api/books/[id] with comment', function(done){
-    //     //done();
-    //   });
+      test('Test POST /api/books/[id] with comment', function(done){
+        const testData = {
+          comment: 'Great',
+        };
 
-    //   test('Test POST /api/books/[id] without comment field', function(done){
-    //     //done();
-    //   });
+        chai
+          .request(server)
+          .post(`/api/books/${specialBookId}`)
+          .send(testData)
+          .end(function(err, res){
+            assert.equal(res.status, 200);
 
-    //   test('Test POST /api/books/[id] with comment, id not in db', function(done){
-    //     //done();
-    //   });
+            assert.isObject(res.body);
+
+            assert.property(res.body, '_id');
+            assert.isString(res.body._id);
+
+            assert.property(res.body, 'title');
+            assert.isString(res.body.title);
+
+            assert.property(res.body, 'comments');
+            assert.isArray(res.body.comments);
+            assert.include(res.body.comments, testData.comment);
+
+            assert.property(res.body, 'commentcount');
+            assert.isNumber(res.body.commentcount);
+
+            done();
+        });     
+      });
+
+      test('Test POST /api/books/[id] without comment field', function(done){
+        const testData = {};
+
+        chai
+          .request(server)
+          .post(`/api/books/${specialBookId}`)
+          .send(testData)
+          .end(function(err, res){
+            assert.equal(res.status, 200);  
+
+            assert.equal(res.text, 'missing required field comment');
+
+            done();
+        });    
+      });
+
+      test('Test POST /api/books/[id] with comment, id not in db', function(done){
+        const testData = {
+          comment: 'Great',
+        };
+
+        chai
+          .request(server)
+          .post('/api/books/invalidId')
+          .send(testData)
+          .end(function(err, res){
+            assert.equal(res.status, 200);  
+
+            assert.equal(res.text, 'no book exists');
+
+            done();
+        });    
+      });
       
-    // });
+    });
 
     // suite('DELETE /api/books/[id] => delete book object id', function() {
 

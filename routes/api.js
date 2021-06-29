@@ -69,15 +69,15 @@ module.exports = function (app) {
       }
 
       try {
-        const bookNew = new bookModel({
+        const book = new bookModel({
           title
         });
 
-        await bookNew.save();
+        await book.save();
 
         return res.status(200).json({
-          _id: bookNew._id,
-          title: bookNew.title,
+          _id: book._id,
+          title: book.title,
         });
       } catch(error) {
         res.status(200).json({
@@ -116,9 +116,35 @@ module.exports = function (app) {
     })
     
     .post(async (req, res) => {
-      let bookid = req.params.id;
-      let comment = req.body.comment;
-      //json res format same as .get
+      const _id = req.params.id;
+      const comment = req.body.comment;
+      
+      if (!comment) {
+        return res.status(200).send('missing required field comment');
+      }
+
+      try {
+        const book = await bookModel.findOneAndUpdate(
+          { _id },
+          { $push: { 
+            comments: comment 
+          }}, 
+          { new: true }
+        );
+        
+        if (!book) {
+          return res.status(200).send('no book exists');
+        }
+
+        res.status(200).json({
+          _id: book._id,
+          title: book.title,
+          comments: book.comments,
+          commentcount: book.comments.length,
+        });
+      } catch(error) {
+        return res.status(200).send('no book exists');
+      }
     })
     
     .delete(async (req, res) => {
