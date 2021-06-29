@@ -1,11 +1,3 @@
-/*
-*
-*
-*       FILL IN EACH FUNCTIONAL TEST BELOW COMPLETELY
-*       -----[Keep the tests in the same order!]-----
-*       
-*/
-
 const chaiHttp = require('chai-http');
 const chai = require('chai');
 const assert = chai.assert;
@@ -19,6 +11,7 @@ suite('Functional Tests', function() {
   * ----[EXAMPLE TEST]----
   * Each test should completely test the response of the API end-point including response status code!
   */
+  /*
   test('#example Test GET /api/books', function(done){
      chai.request(server)
       .get('/api/books')
@@ -31,21 +24,51 @@ suite('Functional Tests', function() {
         done();
       });
   });
+  */
   /*
   * ----[END of EXAMPLE TEST]----
   */
 
   suite('Routing tests', function() {
 
-
     suite('POST /api/books with title => create book object/expect book object', function() {
       
       test('Test POST /api/books with title', function(done) {
-        //done();
+        const testData = {
+          title: '1984',
+        };
+
+        chai
+          .request(server)
+          .post('/api/books')
+          .send(testData)
+          .end(function (err, res) {
+            assert.equal(res.status, 200);  
+
+            assert.property(res.body, '_id');
+            assert.isNotEmpty(res.body._id);
+
+            assert.property(res.body, 'title');
+            assert.equal(res.body.title, testData.title);
+
+            done();
+          });
       });
       
       test('Test POST /api/books with no title given', function(done) {
-        //done();
+        const testData = {};
+
+        chai
+          .request(server)
+          .post('/api/books')
+          .send(testData)
+          .end(function (err, res) {
+            assert.equal(res.status, 200);  
+
+            assert.equal(res.text, 'missing required field title');
+
+            done();
+          });
       });
       
     });
